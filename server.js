@@ -1,5 +1,6 @@
 const express = require('express');
 const mineflayer = require('mineflayer');
+const https = require('https');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -128,4 +129,18 @@ app.get('/health', (req, res) => {
 
 app.listen(PORT, () => {
     log(`Web health server listening on port ${PORT}`);
+
+    // Self-ping every 8 minutes to keep Render free tier awake 24/7 (15-minute idle limit)
+    const SELF_URL = process.env.RENDER_EXTERNAL_URL || 'https://sodium-keepalive-bot.onrender.com';
+    setInterval(() => {
+        try {
+            https.get(`${SELF_URL}/health`, (res) => {
+                log(`Self-ping keep-alive status: ${res.statusCode}`);
+            }).on('error', (err) => {
+                log(`Self-ping error: ${err.message}`);
+            });
+        } catch (e) {
+            log(`Self-ping exception: ${e.message}`);
+        }
+    }, 8 * 60 * 1000); // 8 minutes
 });
