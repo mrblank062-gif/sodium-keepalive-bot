@@ -1,0 +1,13 @@
+{
+  "name": "sodium-keepalive-bot",
+  "version": "1.0.0",
+  "description": "24/7 Keep-Alive Bot for Sodium SMP",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mineflayer": "^4.39.0"
+  }
+}
